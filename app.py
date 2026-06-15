@@ -1014,7 +1014,7 @@ st.markdown("""
 <div style="background:linear-gradient(135deg,#1B3A6B,#0D7680);border-radius:12px;padding:24px;text-align:center;margin-top:20px">
     <div style="color:#FFFFFF;font-size:16px;font-weight:700;margin-bottom:8px">Ready to assess your organization's AI contact center readiness?</div>
     <div style="color:rgba(255,255,255,0.75);font-size:13px;margin-bottom:16px">James D. McClain, MBA | Healthcare IT Leader | AI Contact Center Modernization | Responsible AI Governance</div>
-    <a href="https://www.linkedin.com/in/jamesdmcclain" target="_blank" style="background:rgba(255,255,255,0.15);color:#FFFFFF;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.3)">
+    <a href="https://www.linkedin.com/in/jdmcclain/" target="_blank" style="background:rgba(255,255,255,0.15);color:#FFFFFF;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.3)">
         Connect on LinkedIn →
     </a>
 </div>
