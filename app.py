@@ -1,4 +1,3 @@
-
 import streamlit as st
 import anthropic
 import pandas as pd
@@ -287,8 +286,8 @@ RISK_COLORS = {"LOW": "risk-low", "MEDIUM": "risk-medium", "HIGH": "risk-high", 
 
 # ── Sidebar ───────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown('<div class="sidebar-logo">🏥 JDMC Services LLC</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-sub">AI Contact Center Intelligence Hub</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-logo">🏥 Healthcare AI Portfolio</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-sub">James D. McClain, MBA</div>', unsafe_allow_html=True)
     st.divider()
 
     st.markdown("**Navigation**")
@@ -313,9 +312,9 @@ with st.sidebar:
     <strong style="color:#6B7280">Portfolio Demo</strong><br>
     Synthetic data only.<br>
     No PHI included.<br><br>
-    <strong style="color:#6B7280">JDMC Services LLC</strong><br>
-    jdmcservices.com<br>
-    James D. McClain, MBA
+    <strong style="color:#6B7280">James D. McClain, MBA</strong><br>
+    Healthcare IT Leader<br>
+    AI Contact Center Modernization
     </div>
     """, unsafe_allow_html=True)
 
@@ -325,6 +324,7 @@ st.markdown("""
     <div class="hero-badge">⚕ Synthetic Portfolio Demo — No PHI Included</div>
     <h1>Healthcare AI Contact Center Intelligence Hub</h1>
     <p>AI-powered KPI analysis, virtual agent simulation, readiness scoring, and performance insights — built to demonstrate AI/CX Solutions Architect methodology.</p>
+    <p style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:8px">James D. McClain, MBA — Healthcare IT Leader | AI Contact Center Modernization | Responsible AI Governance</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1013,9 +1013,9 @@ st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("""
 <div style="background:linear-gradient(135deg,#1B3A6B,#0D7680);border-radius:12px;padding:24px;text-align:center;margin-top:20px">
     <div style="color:#FFFFFF;font-size:16px;font-weight:700;margin-bottom:8px">Ready to assess your organization's AI contact center readiness?</div>
-    <div style="color:rgba(255,255,255,0.75);font-size:13px;margin-bottom:16px">JDMC Services LLC | James D. McClain, MBA | AI Transformation & Governance Consulting</div>
-    <a href="https://jdmcservices.com/demos/ai-contact-center" target="_blank" style="background:rgba(255,255,255,0.15);color:#FFFFFF;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.3)">
-        View Full Portfolio Demo →
+    <div style="color:rgba(255,255,255,0.75);font-size:13px;margin-bottom:16px">James D. McClain, MBA | Healthcare IT Leader | AI Contact Center Modernization | Responsible AI Governance</div>
+    <a href="https://www.linkedin.com/in/jamesdmcclain" target="_blank" style="background:rgba(255,255,255,0.15);color:#FFFFFF;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.3)">
+        Connect on LinkedIn →
     </a>
 </div>
 """, unsafe_allow_html=True)
