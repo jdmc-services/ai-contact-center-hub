@@ -571,11 +571,15 @@ CRITICAL RULES:
                     )
 
                     raw = response.content[0].text.strip()
-                    # Clean JSON
+                    # Robust JSON extraction
                     if "```json" in raw:
                         raw = raw.split("```json")[1].split("```")[0].strip()
                     elif "```" in raw:
                         raw = raw.split("```")[1].split("```")[0].strip()
+                    start = raw.find("{")
+                    end = raw.rfind("}") + 1
+                    if start != -1 and end > start:
+                        raw = raw[start:end]
 
                     result = json.loads(raw)
 
@@ -873,54 +877,106 @@ Respond ONLY with a valid JSON object:
                         )
 
                         raw = response.content[0].text.strip()
+                        # Robust JSON extraction
                         if "```json" in raw:
                             raw = raw.split("```json")[1].split("```")[0].strip()
                         elif "```" in raw:
                             raw = raw.split("```")[1].split("```")[0].strip()
+                        # Find JSON object boundaries
+                        start = raw.find("{")
+                        end = raw.rfind("}") + 1
+                        if start != -1 and end > start:
+                            raw = raw[start:end]
 
                         r = json.loads(raw)
 
-                        sev_color = {"CRITICAL":"#EF4444","HIGH":"#F59E0B","MEDIUM":"#0D7680","LOW":"#10B981"}.get(r.get("severity","HIGH"),"#F59E0B")
+                        sev = r.get("severity", "HIGH")
+                        sev_color = {"CRITICAL":"#EF4444","HIGH":"#F59E0B","MEDIUM":"#0D7680","LOW":"#10B981"}.get(sev,"#F59E0B")
 
+                        # Dashboard header
                         st.markdown(f"""
-                        <div class="ai-response">
-                            <div class="ai-response-header">📊 Analysis Results — {kpi_choice}</div>
+                        <div style="background:linear-gradient(135deg,#1B3A6B,#0D7680);border-radius:12px;padding:16px 20px;margin-bottom:16px">
+                            <div style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:0.8px">Analysis Results</div>
+                            <div style="color:#FFFFFF;font-size:20px;font-weight:700;margin-top:4px">{kpi_choice}</div>
+                        </div>
+                        """, unsafe_allow_html=True)
 
-                            <div style="display:flex;gap:12px;margin-bottom:16px">
-                                <div style="flex:1;background:#0A0F1E;border-radius:8px;padding:12px;text-align:center">
-                                    <div style="color:#6B7280;font-size:11px;text-transform:uppercase">Benchmark</div>
-                                    <div style="color:#10B981;font-size:16px;font-weight:700">{r.get('benchmark','—')}</div>
-                                </div>
-                                <div style="flex:1;background:#0A0F1E;border-radius:8px;padding:12px;text-align:center">
-                                    <div style="color:#6B7280;font-size:11px;text-transform:uppercase">Severity</div>
-                                    <div style="color:{sev_color};font-size:16px;font-weight:700">{r.get('severity','—')}</div>
-                                </div>
-                            </div>
+                        # Top metric row
+                        m1, m2, m3 = st.columns(3)
+                        with m1:
+                            st.markdown(f"""
+                            <div class="metric-card">
+                                <div class="label">Industry Benchmark</div>
+                                <div class="value metric-green" style="font-size:22px">{r.get('benchmark','—')}</div>
+                            </div>""", unsafe_allow_html=True)
+                        with m2:
+                            st.markdown(f"""
+                            <div class="metric-card">
+                                <div class="label">Severity Rating</div>
+                                <div class="value" style="font-size:22px;color:{sev_color}">{sev}</div>
+                            </div>""", unsafe_allow_html=True)
+                        with m3:
+                            st.markdown(f"""
+                            <div class="metric-card">
+                                <div class="label">Timeline to Results</div>
+                                <div class="value metric-teal" style="font-size:18px">{r.get('implementation_timeline','—')}</div>
+                            </div>""", unsafe_allow_html=True)
 
-                            <div style="color:#9CA3AF;font-size:13px;margin-bottom:16px">{r.get('gap_assessment','—')}</div>
+                        st.markdown("<br>", unsafe_allow_html=True)
 
-                            <div class="ai-response-header">🔍 Root Causes</div>
-                            {''.join([f'<div style="color:#D1D5DB;font-size:13px;padding:3px 0">• {c}</div>' for c in r.get('top_root_causes',[])])}
+                        # Gap assessment
+                        st.markdown(f"""
+                        <div style="background:#111827;border-left:4px solid {sev_color};border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:16px">
+                            <div style="color:#6B7280;font-size:11px;text-transform:uppercase;margin-bottom:4px">Gap Assessment</div>
+                            <div style="color:#D1D5DB;font-size:13px">{r.get('gap_assessment','—')}</div>
+                        </div>
+                        """, unsafe_allow_html=True)
 
-                            <div class="ai-response-header" style="margin-top:16px">💡 Primary AI Recommendation</div>
-                            <div style="color:#FFFFFF;font-size:15px;font-weight:700;margin-bottom:6px">{r.get('primary_ai_recommendation','—')}</div>
-                            <div style="color:#9CA3AF;font-size:13px;margin-bottom:12px">{r.get('why_this_use_case','—')}</div>
+                        # Two columns — root causes + recommendation
+                        rc1, rc2 = st.columns(2)
+                        with rc1:
+                            st.markdown('<div style="color:#0D7680;font-size:12px;font-weight:700;text-transform:uppercase;margin-bottom:8px">🔍 Root Causes</div>', unsafe_allow_html=True)
+                            for c in r.get('top_root_causes', []):
+                                st.markdown(f"""
+                                <div style="background:#111827;border:1px solid #1F2937;border-radius:8px;padding:10px 14px;margin-bottom:6px;color:#D1D5DB;font-size:13px">
+                                    ▸ {c}
+                                </div>""", unsafe_allow_html=True)
 
-                            <div style="display:flex;gap:12px;margin-bottom:12px">
-                                <div style="flex:1;background:#0A0F1E;border-radius:8px;padding:12px">
-                                    <div style="color:#6B7280;font-size:11px;text-transform:uppercase">Expected Improvement</div>
-                                    <div style="color:#10B981;font-size:13px;font-weight:600;margin-top:4px">{r.get('expected_improvement','—')}</div>
-                                </div>
-                                <div style="flex:1;background:#0A0F1E;border-radius:8px;padding:12px">
-                                    <div style="color:#6B7280;font-size:11px;text-transform:uppercase">Est. Annual Value</div>
-                                    <div style="color:#10B981;font-size:13px;font-weight:600;margin-top:4px">{r.get('estimated_annual_value','—')}</div>
-                                </div>
-                            </div>
+                        with rc2:
+                            st.markdown('<div style="color:#0D7680;font-size:12px;font-weight:700;text-transform:uppercase;margin-bottom:8px">💡 AI Recommendation</div>', unsafe_allow_html=True)
+                            st.markdown(f"""
+                            <div style="background:#0D1F3C;border:1px solid #0D7680;border-radius:8px;padding:14px;margin-bottom:8px">
+                                <div style="color:#FFFFFF;font-size:14px;font-weight:700;margin-bottom:6px">{r.get('primary_ai_recommendation','—')}</div>
+                                <div style="color:#9CA3AF;font-size:12px;line-height:1.6">{r.get('why_this_use_case','—')}</div>
+                            </div>""", unsafe_allow_html=True)
 
-                            <div class="ai-response-header">⚡ Next Step This Week</div>
-                            <div style="color:#0D7680;font-size:13px;font-weight:600">{r.get('next_step','—')}</div>
+                        st.markdown("<br>", unsafe_allow_html=True)
 
-                            <div class="ai-response-header" style="margin-top:16px">🛡️ Governance Consideration</div>
+                        # Value row
+                        v1, v2 = st.columns(2)
+                        with v1:
+                            st.markdown(f"""
+                            <div style="background:#064E3B;border:1px solid #10B981;border-radius:10px;padding:16px;text-align:center">
+                                <div style="color:#6EE7B7;font-size:11px;text-transform:uppercase;margin-bottom:6px">Expected Improvement</div>
+                                <div style="color:#FFFFFF;font-size:15px;font-weight:700">{r.get('expected_improvement','—')}</div>
+                            </div>""", unsafe_allow_html=True)
+                        with v2:
+                            st.markdown(f"""
+                            <div style="background:#064E3B;border:1px solid #10B981;border-radius:10px;padding:16px;text-align:center">
+                                <div style="color:#6EE7B7;font-size:11px;text-transform:uppercase;margin-bottom:6px">Est. Annual Value</div>
+                                <div style="color:#FFFFFF;font-size:15px;font-weight:700">{r.get('estimated_annual_value','—')}</div>
+                            </div>""", unsafe_allow_html=True)
+
+                        st.markdown("<br>", unsafe_allow_html=True)
+
+                        # Next step + governance
+                        st.markdown(f"""
+                        <div style="background:#0A2540;border:1px solid #0D7680;border-radius:10px;padding:16px;margin-bottom:10px">
+                            <div style="color:#0D7680;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:6px">⚡ Next Step This Week</div>
+                            <div style="color:#FFFFFF;font-size:13px;font-weight:600">{r.get('next_step','—')}</div>
+                        </div>
+                        <div style="background:#111827;border:1px solid #1F2937;border-radius:10px;padding:16px">
+                            <div style="color:#6B7280;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:6px">🛡️ Governance Consideration</div>
                             <div style="color:#9CA3AF;font-size:13px">{r.get('governance_consideration','—')}</div>
                         </div>
                         """, unsafe_allow_html=True)
