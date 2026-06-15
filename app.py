@@ -1,3 +1,4 @@
+
 import streamlit as st
 import anthropic
 import pandas as pd
@@ -580,6 +581,10 @@ CRITICAL RULES:
                     end = raw.rfind("}") + 1
                     if start != -1 and end > start:
                         raw = raw[start:end]
+                    # Clean problematic characters
+                    raw = raw.replace("’", "'").replace("‘", "'")
+                    raw = raw.replace("“", '"').replace("”", '"')
+                    raw = raw.replace("–", "-").replace("—", "-")
 
                     result = json.loads(raw)
 
@@ -855,7 +860,7 @@ Current Value: {kpi_value}
 Environment: {environment}
 Weekly Call Volume: {weekly_calls:,} calls
 
-Respond ONLY with a valid JSON object:
+CRITICAL: Respond ONLY with a valid JSON object. Use only standard ASCII characters. No smart quotes, no em-dashes, no special unicode. Use straight apostrophes only inside string values if needed. No markdown, no code blocks, just raw JSON:
 {{
   "benchmark": "industry benchmark for this KPI",
   "gap_assessment": "one sentence on how far from benchmark",
@@ -887,6 +892,10 @@ Respond ONLY with a valid JSON object:
                         end = raw.rfind("}") + 1
                         if start != -1 and end > start:
                             raw = raw[start:end]
+                        # Clean problematic characters
+                        raw = raw.replace("’", "'").replace("‘", "'")
+                        raw = raw.replace("“", '"').replace("”", '"')
+                        raw = raw.replace("–", "-").replace("—", "-")
 
                         r = json.loads(raw)
 
