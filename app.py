@@ -299,17 +299,12 @@ with st.sidebar:
 
     st.divider()
     st.markdown("**API Configuration**")
-    api_key = st.text_input(
-        "Anthropic API Key",
-        type="password",
-        placeholder="sk-ant-...",
-        help="Enter your Anthropic API key to enable AI-powered responses"
-    )
+    api_key = st.secrets.get("ANTHROPIC_API_KEY", "")
 
     if api_key:
         st.success("✅ API Key connected")
     else:
-        st.warning("⚠️ Enter API key for AI features")
+        st.warning("⚠️ API key not configured")
 
     st.divider()
     st.markdown("""
